@@ -10,7 +10,7 @@ router.post("/signup", (req, res, next) => {
   const { name, email, password } = req.body;
   if (!email || !password || !name) {
     return res.status(422).json({
-      error: "Please, provide all the necessary params",
+      error: "Please, provide all the necessary fields",
       code: 422,
     });
   }
@@ -54,7 +54,7 @@ router.post("/login", (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(422).json({
-      message: "You are forgetting some credentials: Email or Password",
+      error: "You are forgetting some credentials: Email or Password",
       status: 422,
     });
   } else {
@@ -62,8 +62,8 @@ router.post("/login", (req, res, next) => {
       .then((savedUser) => {
         if (!savedUser) {
           return res.status(422).json({
-            message: "Invalid email or password",
-            error: 422,
+            error: "Invalid email or password",
+            status: 422,
           });
         } else {
           bcrypt
@@ -71,13 +71,19 @@ router.post("/login", (req, res, next) => {
             .then((comparison) => {
               if (comparison) {
                 const token = jwt.sign({ _id: savedUser._id }, JWT_SECRET);
+                const { _id, name, email } = savedUser;
                 return res.status(200).json({
                   message: "Logged in successfully",
                   token,
+                  user: {
+                    _id,
+                    name,
+                    email,
+                  },
                 });
               } else {
                 return res.status(422).json({
-                  email: "Invalid Email or Password",
+                  error: "Invalid Email or Password",
                 });
               }
             })

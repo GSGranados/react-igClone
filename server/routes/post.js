@@ -4,8 +4,8 @@ const Post = require("../models/post");
 const requireLogin = require("../middleware/loginVerify");
 
 router.post("/post/create", requireLogin, (req, res, next) => {
-  const { title, body } = req.body;
-  if (!title || !body) {
+  const { title, body, url } = req.body;
+  if (!title || !body || !url) {
     return res.status(422).json({
       message: "Please add all the required fields",
       code: 422,
@@ -15,13 +15,14 @@ router.post("/post/create", requireLogin, (req, res, next) => {
   const post = new Post({
     title: title,
     body: body,
+    photo: url,
     postedBy: req.user,
   });
   post
     .save()
     .then((result) => {
       return res.status(201).json({
-        message: "Posted Created Successfylly",
+        message: "Post Created Successfully",
         post: result,
       });
     })

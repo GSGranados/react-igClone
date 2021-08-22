@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     res.status(401).json({
-      message: "You're not authenticated yet.",
+      message: "You must be logged in.",
       status: 401,
     });
   } else {

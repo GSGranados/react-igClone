@@ -5,6 +5,7 @@ import Home from "./components/views/Home";
 import Profile from "./components/views/Profile";
 import Login from "./components/views/Login";
 import Signup from "./components/views/Signup";
+import CreatePost from "./components/views/CreatePost";
 const App = () => {
   return (
     <BrowserRouter>
@@ -13,6 +14,7 @@ const App = () => {
       <Route path="/profile" component={Profile}></Route>
       <Route path="/login" component={Login}></Route>
       <Route path="/signup" component={Signup}></Route>
+      <Route path="/new" component={CreatePost}></Route>
     </BrowserRouter>
   );
 };

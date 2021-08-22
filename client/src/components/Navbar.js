@@ -17,6 +17,9 @@ const Navbar = () => {
           <li>
             <Link to="/profile">Profile</Link>
           </li>
+          <li>
+            <Link to="/new">New Post</Link>
+          </li>
         </ul>
       </div>
     </nav>
