@@ -1,38 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Home = () => {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await fetch("/posts", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        },
+      });
+      const data = await response.json();
+      setPosts(data.posts);
+    };
+    fetchPosts();
+  }, []);
+
   return (
     <div className="home">
-      <div className="card home-card">
-        <h5>Steven</h5>
-        <div className="card-image">
-          <img
-            src="https://images.unsplash.com/photo-1504593811423-6dd665756598?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-            alt="My profile"
-          />
-        </div>
-        <div className="card-content">
-          <i className="material-icons">favorite</i>
-          <h6>Title</h6>
-          <p>This is my post</p>
-          <input type="text" placeholder="add a comment" />
-        </div>
-      </div>
-      <div className="card home-card">
-        <h5>Steven</h5>
-        <div className="card-image">
-          <img
-            src="https://images.unsplash.com/photo-1504593811423-6dd665756598?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-            alt="My profile"
-          />
-        </div>
-        <div className="card-content">
-          <i className="material-icons">favorite</i>
-          <h6>Title</h6>
-          <p>This is my post</p>
-          <input type="text" placeholder="add a comment" />
-        </div>
-      </div>
+      {posts.map((post) => {
+        return (
+          <div className="card home-card" key={post._id}>
+            <h5>{post.postedBy.name}</h5>
+            <div className="card-image">
+              <img src={post.photo} alt={post.title} />
+            </div>
+            <div className="card-content">
+              <i className="material-icons">favorite</i>
+              <h6>{post.title}</h6>
+              <p>{post.body}</p>
+              <input type="text" placeholder="add a comment" />
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
