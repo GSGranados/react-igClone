@@ -89,3 +89,15 @@ h2 {
   padding: 1.2rem;
   text-align: center;
 }
+.icon-action {
+  margin-right: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.icon-action:hover {
+  color: #64b5f6;
+}
+.icon-action:last-of-type {
+  margin-right: 0rem;
+}
