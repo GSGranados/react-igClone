@@ -9,11 +9,12 @@ import Signup from "./components/views/Signup";
 import CreatePost from "./components/views/CreatePost";
 import { userReducer, initialState } from "./reducers/userReducer";
 import { userLoggedIn } from "./actions";
+import UserProfile from "./components/views/UserProfile";
 export const UserContext = createContext();
 
 const Routing = () => {
   const history = useHistory();
-  const { state, dispatch } = useContext(UserContext);
+  const { dispatch } = useContext(UserContext);
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user) {
@@ -25,7 +26,8 @@ const Routing = () => {
   return (
     <Switch>
       <Route path="/" exact component={Home}></Route>
-      <Route path="/profile" component={Profile}></Route>
+      <Route exact path="/profile" component={Profile}></Route>
+      <Route path="/profile/:id" component={UserProfile}></Route>
       <Route path="/login" component={Login}></Route>
       <Route path="/signup" component={Signup}></Route>
       <Route path="/new" component={CreatePost}></Route>

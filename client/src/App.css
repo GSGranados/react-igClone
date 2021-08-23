@@ -101,3 +101,12 @@ h2 {
 .icon-action:last-of-type {
   margin-right: 0rem;
 }
+
+.comment-header {
+  font-weight: 500;
+  margin-right: 0.3rem;
+}
+.delete {
+  float: right;
+  color: #ef5350 !important;
+}

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../App";
 const Profile = () => {
   const [myPosts, setMyPosts] = useState([]);
-  const { state, dispatch } = useContext(UserContext);
+  const { state } = useContext(UserContext);
   useEffect(() => {
     const fetchMyPosts = async () => {
       const response = await fetch("/myposts", {
