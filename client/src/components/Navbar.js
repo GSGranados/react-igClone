@@ -33,6 +33,9 @@ const Navbar = () => {
         <li>
           <Link to="/new">New Post</Link>
         </li>
+        <li>
+          <Link to="/following">Following</Link>
+        </li>
         <button
           onClick={() => logout()}
           className="btn waves-effect waves-light #c62828 red darken-3"

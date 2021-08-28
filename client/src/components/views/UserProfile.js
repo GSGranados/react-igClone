@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
+import { userFollowing } from "../../actions";
+import { UserContext } from "../../App";
 const UserProfile = () => {
+  const { state, dispatch } = useContext(UserContext);
   const [profile, setProfile] = useState(null);
   const { id } = useParams();
+  const [followed, setFollowed] = useState(state.followers.includes(id));
 
   useEffect(() => {
     const fetchMyPosts = async () => {
@@ -18,6 +21,56 @@ const UserProfile = () => {
     fetchMyPosts();
   }, [id]);
 
+  const followUser = async () => {
+    const response = await fetch("/follow", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({ followId: id }),
+    });
+    const { result } = await response.json();
+    dispatch(userFollowing(result.followers, result.following));
+    localStorage.setItem("user", JSON.stringify(result));
+    setProfile((prevState) => {
+      return {
+        ...prevState,
+        user: {
+          ...prevState.user,
+          followers: [...prevState.user.followers, result._id],
+        },
+      };
+    });
+    setFollowed(false);
+  };
+  const unfollowUser = async () => {
+    const response = await fetch("/unfollow", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({ unfollowId: id }),
+    });
+    const { result } = await response.json();
+    dispatch(userFollowing(result.followers, result.following));
+    localStorage.setItem("user", JSON.stringify(result));
+    setProfile((prevState) => {
+      const newFollowers = prevState.user.followers.filter(
+        (follower) => follower !== result._id
+      );
+      return {
+        ...prevState,
+        user: {
+          ...prevState.user,
+          followers: newFollowers,
+        },
+      };
+    });
+    setFollowed(true);
+  };
+
   return (
     <>
       {profile ? (
@@ -26,7 +79,7 @@ const UserProfile = () => {
             <div>
               <img
                 className="profile-image"
-                src="https://images.unsplash.com/photo-1534330786040-317bdb76ccff?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDl8fHBlcnNvbnxlbnwwfDJ8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                src={profile ? profile.user.profile : "Loading..."}
                 alt="Profile"
               />
             </div>
@@ -35,9 +88,24 @@ const UserProfile = () => {
               <h5>{profile.user.email}</h5>
               <div className="profile-details">
                 <h6>{profile.posts.length} Posts</h6>
-                <h6>40 Followers</h6>
-                <h6>40 Following</h6>
+                <h6>{profile.user.followers.length} Followers</h6>
+                <h6>{profile.user.following.length} Following</h6>
               </div>
+              {followed ? (
+                <button
+                  onClick={() => followUser()}
+                  className="btn waves-effect waves-light  follow-button"
+                >
+                  Follow
+                </button>
+              ) : (
+                <button
+                  onClick={() => unfollowUser()}
+                  className="btn waves-effect waves-light  follow-button"
+                >
+                  Unfollow
+                </button>
+              )}
             </div>
           </div>
           <div className="profile-highlights">

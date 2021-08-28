@@ -5,7 +5,7 @@ import { Constants } from "../../contants";
 import M from "materialize-css";
 import { userLoggedIn } from "../../actions";
 const Login = () => {
-  const { state, dispatch } = useContext(UserContext);
+  const { dispatch } = useContext(UserContext);
   const history = useHistory();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -63,6 +63,7 @@ const Login = () => {
         <input
           type="password"
           value={password}
+          placeholder="password"
           onChange={(e) => setPassword(e.target.value)}
         />
         <button

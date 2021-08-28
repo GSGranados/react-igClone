@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Constants } from "../../contants";
 import M from "materialize-css";
@@ -7,8 +7,34 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [image, setImage] = useState("");
+  const [url, setUrl] = useState();
 
-  const postData = async () => {
+  useEffect(() => {
+    if (url) postFormFields();
+  }, [url]);
+
+  const uploadProfilePicture = async () => {
+    try {
+      const data = new FormData();
+      data.append("file", image);
+      data.append("upload_preset", "insta-clone");
+      data.append("cloud_name", "sgranados");
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/sgranados/image/upload",
+        {
+          method: "post",
+          body: data,
+        }
+      );
+      const result = await response.json();
+      setUrl(result.url);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const postFormFields = async () => {
     if (!Constants.EMAIL_REGEX.test(email)) {
       M.toast({
         html: "Please provide a valid E-mail",
@@ -26,6 +52,7 @@ const Signup = () => {
           name,
           password,
           email,
+          url,
         }),
       });
       const data = await response.json();
@@ -44,6 +71,14 @@ const Signup = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const postData = async () => {
+    if (image) {
+      uploadProfilePicture();
+      return;
+    }
+    postFormFields();
   };
 
   return (
@@ -65,8 +100,18 @@ const Signup = () => {
         <input
           type="password"
           value={password}
+          placeholder="password"
           onChange={(e) => setPassword(e.target.value)}
         />
+        <div className="file-field input-field">
+          <div className="btn  #64b5f6 blue darken-1">
+            <span>Profile Picture</span>
+            <input onChange={(e) => setImage(e.target.files[0])} type="file" />
+          </div>
+          <div className="file-path-wrapper">
+            <input className="file-path validate" type="text" />
+          </div>
+        </div>
         <button
           onClick={() => postData()}
           className="btn waves-effect waves-light #64b5f6 blue darken-1 login-button"

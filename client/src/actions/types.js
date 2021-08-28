@@ -1,4 +1,6 @@
 export const types = {
   USER: "LOGGED_IN",
   LOGGED_OUT: "LOGGED_OUT",
+  FOLLOW: "FOLLOW_UNFOLLOW",
+  UPDATE_PHOTO: "UPDATE_PHOTO",
 };
